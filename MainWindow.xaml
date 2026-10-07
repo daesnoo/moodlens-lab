@@ -1,0 +1,57 @@
+<Window x:Class="TelegramMood.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MoodLens Lab — анализ эмоционального тона" Icon="{DynamicResource AppIcon}" Width="1180" Height="760" MinWidth="900" MinHeight="620" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="250"/><ColumnDefinition Width="*"/><ColumnDefinition Width="306"/></Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#172B29">
+            <Grid Margin="22">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="2,3,0,30">
+                    <Border Width="38" Height="38" CornerRadius="12" Background="#7ED2B0"><TextBlock Text="M" Foreground="#16302D" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                    <StackPanel Margin="11,0,0,0" VerticalAlignment="Center"><TextBlock Text="MoodLens Lab" Foreground="White" FontSize="16" FontWeight="Bold"/><TextBlock Text="локальный анализ" Foreground="#91A6A2" FontSize="10"/></StackPanel>
+                </StackPanel>
+                <TextBlock Grid.Row="1" Text="ИСТОЧНИК ДАННЫХ" Foreground="#7ED2B0" FontWeight="Bold" FontSize="10" Margin="2,0,0,12"/>
+                <StackPanel Grid.Row="2">
+                    <Button x:Name="DemoButton" Content="Демонстрационный чат" Style="{StaticResource PrimaryButton}" Click="DemoButton_Click" Margin="0,0,0,10"/>
+                    <Button x:Name="ExportButton" Content="Экспортировать чат" Style="{StaticResource GhostButton}" Click="ExportButton_Click"/>
+                    <TextBlock Text="Выберите экспортированный JSON/HTML из Telegram или CSV/TXT. Берутся только текстовые сообщения." TextWrapping="Wrap" Foreground="#9FB1AD" FontSize="11" LineHeight="17" Margin="3,12,3,0"/>
+                </StackPanel>
+                <Border Grid.Row="3" BorderBrush="#2D4642" BorderThickness="0,1,0,0" Padding="3,16,3,3">
+                    <StackPanel><TextBlock Text="ОФЛАЙН-РЕЖИМ" Foreground="#B9CAC6" FontWeight="SemiBold" FontSize="11"/><TextBlock Text="Тексты не отправляются в сеть и не сохраняются приложением." TextWrapping="Wrap" Foreground="#708580" FontSize="10" LineHeight="15" Margin="0,5,0,0"/></StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="28,25,22,28">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="MoodLens Lab" FontSize="27" FontWeight="Bold"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0"><Ellipse Width="8" Height="8" Fill="#39A77B" VerticalAlignment="Center"/><TextBlock x:Name="SourceStatus" Text="Демонстрационные данные" Foreground="{StaticResource MutedBrush}" FontSize="12" Margin="7,0,0,0"/></StackPanel>
+            </StackPanel>
+            <Border Grid.Row="1" Background="#E7F1EC" BorderBrush="#CEE0D7" BorderThickness="1" CornerRadius="12" Padding="13" Margin="0,22,0,18">
+                <TextBlock Text="Учебная модель оценивает тон текста, а не настоящее психологическое состояние человека." Foreground="#31554C" TextWrapping="Wrap" FontSize="11"/>
+            </Border>
+            <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="18" Padding="20">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <Grid Margin="0,0,0,14"><TextBlock Text="Сообщения для анализа" FontSize="17" FontWeight="SemiBold"/><TextBlock x:Name="MessageCount" Text="0 сообщений" HorizontalAlignment="Right" Foreground="{StaticResource MutedBrush}" FontSize="11" VerticalAlignment="Center"/></Grid>
+                    <ListBox x:Name="MessagesList" Grid.Row="1" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.IsVirtualizing="True">
+                        <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="IsHitTestVisible" Value="False"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,0,0,9"/><Setter Property="BorderThickness" Value="0"/></Style></ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate><DataTemplate><Border Background="#F6F4EE" CornerRadius="11" Padding="14,11"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="{Binding Text}" TextWrapping="Wrap" FontSize="13"/><TextBlock Text="{Binding TimeText}" Foreground="{StaticResource MutedBrush}" FontSize="10" Margin="0,5,0,0"/></StackPanel><Border Grid.Column="1" Background="{Binding EmotionBackground}" CornerRadius="12" Padding="9,5" Margin="14,0,0,0" VerticalAlignment="Center"><TextBlock Text="{Binding EmotionName}" Foreground="{Binding EmotionForeground}" FontWeight="SemiBold" FontSize="11"/></Border></Grid></Border></DataTemplate></ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Column="2" Margin="0,25,24,28">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="18" Padding="22" Margin="0,0,0,18">
+                <StackPanel><TextBlock Text="ТЕКУЩИЙ ТОН" Foreground="{StaticResource MutedBrush}" FontSize="10" FontWeight="Bold"/><TextBlock x:Name="CurrentMood" Text="Нет данных" FontSize="28" FontWeight="Bold" Margin="0,8,0,2"/><TextBlock x:Name="MoodExplanation" Text="Запустите демонстрацию или экспортируйте чат из Telegram" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" FontSize="12"/><Border x:Name="ConfidencePill" Background="#E5ECE9" CornerRadius="11" Padding="9,5" HorizontalAlignment="Left" Margin="0,16,0,0"><TextBlock x:Name="ConfidenceText" Text="Уверенность —" Foreground="#45645D" FontSize="11" FontWeight="SemiBold"/></Border></StackPanel>
+            </Border>
+            <Border Grid.Row="1" Background="#E7F1EC" BorderBrush="#CEE0D7" BorderThickness="1" CornerRadius="18" Padding="22">
+                <StackPanel><TextBlock Text="РАСПРЕДЕЛЕНИЕ" Foreground="#4E6963" FontSize="10" FontWeight="Bold"/><TextBlock x:Name="TrendTitle" Text="После анализа появится сводка" TextWrapping="Wrap" FontSize="18" FontWeight="SemiBold" Margin="0,9,0,15"/><ItemsControl x:Name="MoodBars"><ItemsControl.ItemTemplate><DataTemplate><Grid Margin="0,4"><Grid.ColumnDefinitions><ColumnDefinition Width="82"/><ColumnDefinition Width="*"/><ColumnDefinition Width="34"/></Grid.ColumnDefinitions><TextBlock Text="{Binding Name}" FontSize="11" VerticalAlignment="Center"/><ProgressBar Grid.Column="1" Value="{Binding Percent}" Maximum="100" Height="6" Foreground="{Binding Brush}" Background="#CBD9D3"/><TextBlock Grid.Column="2" Text="{Binding PercentText}" FontSize="10" Foreground="{StaticResource MutedBrush}" TextAlignment="Right"/></Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
